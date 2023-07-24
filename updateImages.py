@@ -9,10 +9,12 @@ addedImages = []
 
 def downloadImage(stuff):
     id, url = stuff
-    fileName = url[url.rfind("/") + 1 :]
-    if fileName  in existingImage:
+    fileName : str = url[url.rfind("/") + 1 :]
+    if fileName in existingImage or (fileName.rstrip(".jpg") + ".webp") in existingImage:
         return 
+    
     req = requests.get(url)
+
     if req.status_code != 200:
         return
     
