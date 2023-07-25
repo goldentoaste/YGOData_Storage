@@ -12,3 +12,5 @@ Image storage bucket for ygo-db
 TODOS
 
 * add support for cards with alt arts, like blue eyes, dark magicians, ash blossom, etc. This requires a new json obj that maps the original id to all the alt art image code, along with the alt art's set code. Might be *a lot* of work to do manually.
+
+* see multipleArtWork.txt for a list of cards that needs the alt art treatment
