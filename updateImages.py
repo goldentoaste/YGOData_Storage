@@ -63,7 +63,7 @@ def getEntireDataSet(skipdownload=False):
             workerpool = pool.map(downloadImage, [(i, urls[i]) for i in range(len(urls))])
 
 
-    with Pool(20) as pool:
+    with Pool(10) as pool:
         p = pool.map(compress, os.listdir("./images"))
     
 
@@ -77,7 +77,7 @@ def getEntireDataSet(skipdownload=False):
         for image in p:
             if not image:
                 continue
-          
+            print(image)
             zip.write(f"./compressed/{image}",image)
     print("done.")
 
