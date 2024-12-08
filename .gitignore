@@ -2,3 +2,4 @@ images
 compressed
 *.jpg
 *.webp
+.env
