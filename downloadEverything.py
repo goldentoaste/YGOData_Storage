@@ -5,7 +5,6 @@ from PIL import Image
 import os, sys
 import cloudinary
 import cloudinary.uploader as uploader
-from cloudinary.utils import cloudinary_url
 
 existingImage = set(os.listdir("./downloads"))
 
@@ -22,9 +21,10 @@ def downloadImage(stuff):
         return None
     
     imageData = req.content
-    with open(f"downloads/{fileName}", "wb") as f:
+    path = f"downloads/{fileName}"
+    with open(path, "wb") as f:
         f.write(imageData)
-        return fileName
+        return path
 
 
 def envFile():
@@ -41,11 +41,12 @@ def envFile():
         return out
 
 envVars = envFile()
-cloudinary.config(secure=True, **envVars)
+cloudinary.config( api_key=int(envVars["api_key"]), api_secret=envVars["api_secret"], cloud_name=envVars["cloud_name"])
 
 def uploadToCDN(path:str):
-    uploader.upload_image(path, public_id=os.path.basename(path), asset_folder="ygo")
 
+    res = uploader.unsigned_upload(path,"ygo_profile",  public_id=os.path.basename(path)[:-4], )
+    print(res)
 
 
 def getEntireDataSet():
@@ -60,6 +61,8 @@ def getEntireDataSet():
         for i in d["card_images"]:
             urls.append(i["image_url"])
 
+
+
     newImages : List[str]
     with Pool(20) as pool:
         newImages = pool.map(downloadImage, [(i, urls[i]) for i in range(len(urls))])
@@ -69,10 +72,10 @@ def getEntireDataSet():
 
     
     with Pool(20) as pool:
-        pool.map(uploadToCDN, newImages[:40])
-    
+        pool.map(uploadToCDN, newImages)
 
 
 
 if __name__ == "__main__":
     getEntireDataSet()
+    
